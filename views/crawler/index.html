@@ -1,0 +1,28 @@
+{% extends '../layout.html' %}
+
+{% block body %}
+	<div class="container"  style="margin-top: 87px;">
+	<form action="/crawler/start" method="POST" class="form-horizontal">
+		<fieldset>
+			CRAWLER START
+			<div class="control-group">
+				<label class="control-label" for="url"> URL</label>
+				<div class="controls">
+					<input type="text" name="url" id="url" class="input-xlarge">
+					<p class="help-block">Please input Url,</p>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="deep"> DEEP</label>
+				<div class="controls">
+				<input type="text" name="deep" id="deep" class="input-xlarge">
+				</div>
+			</div>
+			<div class="form-actions">
+				<button class="btn btn-primary" type="submit">START</button>
+			</div>
+		</fieldset>
+	</form>
+	</div>
+{% endblock %}

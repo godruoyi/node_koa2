@@ -1,0 +1,35 @@
+{% extends '../layout.html' %}
+
+{% block body %}
+	<div class="container"  style="margin-top: 87px;">
+	<form action="/reg" method="POST" class="form-horizontal">
+		<fieldset>
+			legend User Reg
+			<div class="control-group">
+				<label class="control-label" for="username"> Username</label>
+				<div class="controls">
+					<input type="text" name="username" id="username" class="input-xlarge">
+					<p class="help-block">你的账户名称，用于登录和显示</p>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="password"> password</label>
+				<div class="controls">
+				<input type="password" name="password" id="password" class="input-xlarge">
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="password-repeat"> Again</label>
+				<div class="controls">
+				<input type="password" name="password-repeat" id="password-repeat" class="input-xlarge">
+				</div>
+			</div>
+			<div class="form-actions">
+				<button class="btn btn-primary" type="submit">Reg</button>
+			</div>
+		</fieldset>
+	</form>
+	</div>
+{% endblock %}

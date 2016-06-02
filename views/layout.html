@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title> {% block title %} {{title}} {% endblock %} </title>
+		<meta charset="UTF-8">
+		<link href="/favicon.ico" mce_href="/favicon.ico" rel="shortcut icon" type="image/x-icon">
+		<link href="/favicon.ico" mce_href="/favicon.ico" rel="icon" type="image/x-icon">
+		<link href="/favicon.ico" mce_href="/favicon.ico" rel="bookmark" type="image/x-icon">
+		{% block global_jscs %}
+			<link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+			<link rel="stylesheet" type="text/css" href="/css/bootstrap-responsive.min.css">
+			<script type="text/javascript" src="//cdn.bootcss.com/jquery/3.0.0-rc1/jquery.min.js"></script>
+			<script type="text/javascript" src="/js/bootstrap.js"></script>
+		{% endblock %}
+
+		{% block ext_js %}
+  		{% endblock %}
+	  	
+	  	{% block ext_css %}
+  		{% endblock %}
+
+	</head>
+	<body>
+		<div class="container">
+		{% block header %}
+			{% include "./common/header.html" %}
+  		{% endblock %}
+
+		{% block body %}
+		{% endblock %}
+
+		{% block footer %}
+			{% include "./common/footer.html" %}
+  		{% endblock %}
+
+  		{% block js %}
+  		{% endblock %}
+  		</div>
+	</body>
+</html>

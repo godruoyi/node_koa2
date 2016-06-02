@@ -1,0 +1,15 @@
+﻿.htaccess
+_codesync
+.DS_Store
+
+.idea
+.idea/*
+.project
+.settings
+.buildpath
+.settings/*
+
+node_modules
+
+*.swp
+tags
