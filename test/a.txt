@@ -1,0 +1,55 @@
+console.log('--------start create ph ---------------');
+await phantom.create(['--ignore-ssl-errors=yes', '--load-images=yes']).then(ph => {
+    _ph = ph;
+    return _ph.createPage();
+}).then(page => {
+    _page = page;
+    _page.property('viewportSize', { width: 1024, height: 768 });
+    _page.property('zoomFactor', 1);
+    return _page.open(_url);
+}).then(status => {
+    console.log(status);
+    if(status !== 'success')
+    {
+    	return false;
+    } else {
+    	_page.render('F:/Zend/apps/node/koa22/public/img/wocaonimeisss.jpg');
+    }
+    return _page.property('content');
+}).then(content  => {
+	if (!content) {
+		console.log('error ------------------------');
+		content = 'error ....';
+	}
+	let content_nohtml = content.replace(/<[^>]+>/g,"");
+	let title = '';
+	let desc = '';
+	let url = _url;
+	let urls = [
+
+	];
+	let model = new DatasModel();
+	model.save({
+		title : title,
+		desc    : desc,
+		url    : _url,
+		content  : content_nohtml,
+		img : 'F:/Zend/apps/node/koa22/public/img/wocaonimeisss.jpg'
+	}, function(err){
+		if (err){
+			console.log(err);
+		}
+	});
+	for(let u of urls)
+	{
+       
+	}
+	ctx.body = content;
+	_page.close();
+    _ph.exit();
+
+}).catch(error => {
+	console.log(error);
+	_page.close();
+    _ph.exit();
+});
