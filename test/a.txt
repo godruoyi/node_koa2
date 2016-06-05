@@ -53,3 +53,54 @@ await phantom.create(['--ignore-ssl-errors=yes', '--load-images=yes']).then(ph =
 	_page.close();
     _ph.exit();
 });
+
+
+
+let tmpdata = phantom.create(['--ignore-ssl-errors=yes', '--load-images=yes']).then(ph => {
+	    	_ph = ph;
+	    	return _ph.createPage();
+		}).then(page => {
+		    _page = page;
+		    _page.property('viewportSize', { width: 1024, height: 768 });
+		    _page.property('zoomFactor', 1);
+		    // _page.onResourceReceived = function(response){//当网页收到所请求的资源时，就会执行该回调函数
+			// 	console.log('当网页收到所请求的资源时，就会执行该回调函数');
+			// }
+			// _page.onResourceRequested = function(requestData, networkRequest){//当页面请求一个资源时，会触发这个回调函数
+			// 	console.log('当页面请求一个资源时，会触发这个回调函数');
+			// }
+		    return _page.open(_url);
+		}).then(status => {
+		    console.log('----------------------------status: '+ status + '----------------------------------');
+		    if(status !== 'success')
+		    {
+		    	return false;
+		    } else {
+		    	_page.render(image);
+		    }
+		    // return _page.property('content');
+
+		}).then(content  => {
+			if (!content) {
+				console.log('error ------------------------');
+				return false;
+			} else {
+				let title = _page.evaluate(function() {
+			      return document.title;
+			    });
+			    console.log(title);
+				// return content;
+			}
+			_page.close();
+		    _ph.exit();
+
+		}).catch(error => {
+			console.log(error);
+			_page.close();
+		    _ph.exit();
+		});
+		if (tmpdata)
+		{
+			cishu ++;
+			queen.push(tmpdata);
+		}

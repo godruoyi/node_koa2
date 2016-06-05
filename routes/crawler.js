@@ -17,14 +17,9 @@ export default class extends BaseController{
 		this.router.post('/crawler/start', async function(ctx, next){
 			console.log('-----------------------------------------');
 			ctx.body = 'Please waiit .....';
-			let c = await getStart(ctx.request.body.url); 
-			let as = [
-				'http://www.baidu.com'
-			];
+			getStart(ctx.request.body.url); 
 
-			getStart(xxx);
-			
-			console.log(c);
+			console.log('-------------bu deng dai zhi jie wang xia zou ----------------');
 			// c.then(function(data){
 			// 	console.log(data);
 			// });

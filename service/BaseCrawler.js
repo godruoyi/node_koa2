@@ -1,55 +1,100 @@
 var phantom = require("phantom");
+var dbmodel = require('./../model/datas.js');
+var mymd5 = require('./utils/md5.js');
+// var display = require('./Display.js');
 
-var test = async function getStart(url)
+// var Crawler = require('./BaseCrawler.js');
+var urlqueue = require('./utils/UrlQueues.js');
+var MyQueue = new urlqueue();
+
+
+
+var test = function getStart(url)
 {
-	let _ph, 
-		_page, 
-		_outObj, 
-		_url = url, 
-		image = 'F:/Zend/apps/node/koa22/public/img/yufenfendsadadsadadadadasdad.jpg';
+	console.log('---------------------------------start read -------------------------------');
+	console.log('==== parse url: ' + url);
+	let	image = 'D:/www/nodeapps/koa2/public/img/'+ mymd5(url) +'.jpg';
+	console.log('==== save image: ' + image);
 
-	return await phantom.create(['--ignore-ssl-errors=yes', '--load-images=yes']).then(ph => {
-	    _ph = ph;
-	    return _ph.createPage();
-	}).then(page => {
-	    _page = page;
-	    _page.property('viewportSize', { width: 1024, height: 768 });
-	    _page.property('zoomFactor', 1);
-	    // _page.onResourceReceived = function(response){//当网页收到所请求的资源时，就会执行该回调函数
-		// 	console.log('当网页收到所请求的资源时，就会执行该回调函数');
-		// }
-		// _page.onResourceRequested = function(requestData, networkRequest){//当页面请求一个资源时，会触发这个回调函数
-		// 	console.log('当页面请求一个资源时，会触发这个回调函数');
-		// }
-	    return _page.open(_url);
-	}).then(status => {
-	    console.log('----------------------------status: '+ status + '----------------------------------');
-	    if(status !== 'success')
-	    {
-	    	return false;
-	    } else {
-	    	_page.render(image);
-	    }
-	    return _page.property('content');
-	}).then(content  => {
-		if (!content) {
-			console.log('error ------------------------');
-			return false;
-		} else {
-			return content;
-		}
-		_page.close();
-	    _ph.exit();
+	console.log('---------------------------------Reading promise ---------------------------');
+	let promise = new Promise(function(resolve, reject){
+		let tmpdata_, sitepage_, phantom_;
 
-	}).catch(error => {
-		console.log(error);
-		_page.close();
-	    _ph.exit();
+		tmpdata_ = phantom.create(['--ignore-ssl-errors=yes', '--load-images=yes']).then(ph => {
+    		phantom_ = ph;
+    		return phantom_.createPage();
+		}).then(page => {
+		    sitepage_ = page;
+		    sitepage_.property('viewportSize', { width: 1024, height: 768 });
+		    sitepage_.property('zoomFactor', 1);
+		    return sitepage_.open(url);
+		}).then(status => {
+		    console.log('----------------------------status: '+ status + '----------------------------------');
+		    if(status !== 'success')
+		    {
+		    	return false;
+		    } else {
+		    	console.log('--------------------------SAVE IMAGE OK-----------------------------');
+		    	sitepage_.render(image);
+		    }
+		    return sitepage_.property('content');
+
+		}).then(content  => {
+			if (!content)
+	    	{
+	    		console.log('==== Error Parse this url error ');
+	    		reject(new Error('Error Parse this url error'));
+	    	}
+	    	else {
+	    		console.log('---------------------------START SAVE DATA TO MONGODO ---------------------------');
+	    		let model = new dbmodel();
+	    		model.save({
+	    		  title : 'test title',
+			      desc    : 'test desc',
+			      url    : url,
+			      content  : 'test content',
+			      img     : image,
+	    		}, function(err){
+	    			if (err)
+	    			{
+	    				console.log('==== SAVE TO MONGODB ERROR');
+	    				reject(new Error('save mongodb err'));
+	    			} else {
+	    				console.log('---------------------------SAVE DATA TO MONGODO SUCCESS ---------------------------');
+	    				//save success
+	    				//get all tag a href
+	    				let aaaa = [
+	    					'http://open.iot.10086.cn/',
+	    					'http://open.iot.10086.cn/bbs/forum.php',
+	    					'http://open.iot.10086.cn/bbs/forum.php?mod=viewthread&tid=563',
+	    					'http://open.iot.10086.cn/case'
+	    				];
+	    				resolve(aaaa);
+	    			}
+	    		});
+	    	}
+			sitepage_.close();
+		    phantom_.exit();
+		}).catch(error => {
+			console.log('==== UNKONW ERROR');
+			console.log(error);
+			sitepage_.close();
+		    phantom_.exit();
+		    reject(new Error('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'));
+		});
+	});
+
+	promise.then(function(d){
+		console.log('----------------------Promise OK,------------------------');
+		console.log(d);
+		MyQueue.push(d);
+		test(MyQueue.next());
+	}, function(e){	
+		console.log('==============error==============');
+		console.log(e);
+		console.log('----------restart next parse ---------------------');
+		test(MyQueue.next());
 	});
 }
 
 module.exports = test;
-
-/**
- * 
- */
