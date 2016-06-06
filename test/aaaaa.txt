@@ -1,0 +1,29 @@
+ep.after('BlogArticleHtml', urls.length*20, function(urls){
+		let count = 0;
+		var fecthurl = function(u, callback){
+			let delay = parseInt((Math.random() * 10000000) % 2000, 10);
+			count++;
+			console.log('现在的并发数是', count, '，正在抓取的是', pageUrl, '，耗时' + delay + '毫秒');
+			
+			let title = '';
+			let dec = '';
+			let keyword = '';
+
+			superagent.get(url).end(function(){
+				let $ = cheerio.load(result.text);
+				title = $('title').text();
+				dec = $('meta[name="description"]').attr('content');
+				keyword = $('meta[name="keywords"]').attr('content');
+			});
+			setTimeout(function () {
+			   count--;
+			   callback(null, pageUrl + ' title is:' + title);
+		    }, delay);
+		}
+		async.mapLimit(urls, 5, function (sss, callback) {
+		  fecthurl(sss, callback);
+		}, function (err, result) {
+		  console.log('All url parse done .............................');
+		  console.log(result);
+		});
+	});

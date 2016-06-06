@@ -24,8 +24,31 @@ export default class extends BaseController{
 			// 	console.log(data);
 			// });
 			console.log('-----------------OVER------------------');
-			
 		});
+
+
+		this.router.get('/crawler/list', async function(ctx, next){
+			let dataModel = new DatasModel();
+			let data = null;
+			dataModel.find({}, function(err, result){
+				if(err){
+					console.log('get mongodo data error, ..' + err);
+					data = false;
+				} else {
+					console.log('find result ok, ');
+					console.log(result);
+					data = result;
+				}
+			});
+			ctx.state = {
+				title: 'crawler list data',
+				data : data
+			};
+			await ctx.render('crawler/list', {
+			});
+		});
+
+
 
 		this.router.post('/crawler/start22', async function(ctx, next){
 			let u = ctx.request.body.url;

@@ -1,22 +1,25 @@
 var phantom = require("phantom");
 var dbmodel = require('./../model/datas.js');
 var mymd5 = require('./utils/md5.js');
-// var display = require('./Display.js');
-
-// var Crawler = require('./BaseCrawler.js');
 var urlqueue = require('./utils/UrlQueues.js');
 var MyQueue = new urlqueue();
+var URLParse2 = require('./utils/UrlParse.js');
+var URLParse = new URLParse2();
+var cheerio = require('cheerio');
 
 
 
 var test = function getStart(url)
 {
-	console.log('---------------------------------start read -------------------------------');
-	console.log('==== parse url: ' + url);
-	let	image = 'D:/www/nodeapps/koa2/public/img/'+ mymd5(url) +'.jpg';
-	console.log('==== save image: ' + image);
+	let domain = URLParse.getDomain(url);
+	console.log('==== Domain:' + domain);
 
-	console.log('---------------------------------Reading promise ---------------------------');
+	if(url === false)
+	{
+		console.log('==== Parse done .....');
+		return;
+	} 
+	let	image = 'F:/Zend/apps/node/koa22/public/downimage/'+ mymd5(url) +'.jpg';
 	let promise = new Promise(function(resolve, reject){
 		let tmpdata_, sitepage_, phantom_;
 
@@ -27,14 +30,13 @@ var test = function getStart(url)
 		    sitepage_ = page;
 		    sitepage_.property('viewportSize', { width: 1024, height: 768 });
 		    sitepage_.property('zoomFactor', 1);
+
 		    return sitepage_.open(url);
 		}).then(status => {
-		    console.log('----------------------------status: '+ status + '----------------------------------');
 		    if(status !== 'success')
 		    {
 		    	return false;
 		    } else {
-		    	console.log('--------------------------SAVE IMAGE OK-----------------------------');
 		    	sitepage_.render(image);
 		    }
 		    return sitepage_.property('content');
@@ -42,34 +44,41 @@ var test = function getStart(url)
 		}).then(content  => {
 			if (!content)
 	    	{
-	    		console.log('==== Error Parse this url error ');
 	    		reject(new Error('Error Parse this url error'));
 	    	}
 	    	else {
-	    		console.log('---------------------------START SAVE DATA TO MONGODO ---------------------------');
+
+	    		console.log('==== START SAVE DATA TO MONGODO');
 	    		let model = new dbmodel();
-	    		model.save({
-	    		  title : 'test title',
-			      desc    : 'test desc',
+	    		$ = cheerio.load(content);
+
+	    		let mo = {
+	    		  title : $('title').text(),
+			      desc    : $('meta[name="description"]').attr('content'),
 			      url    : url,
-			      content  : 'test content',
+			      keyword    : $('meta[name="keywords"]').attr('content'),
+			      domian    : domain,
+			      // content  : content,
 			      img     : image,
-	    		}, function(err){
+	    		};
+	    		console.log(mo);
+	    		
+	    		model.save(mo, function(err){
 	    			if (err)
 	    			{
-	    				console.log('==== SAVE TO MONGODB ERROR');
 	    				reject(new Error('save mongodb err'));
 	    			} else {
-	    				console.log('---------------------------SAVE DATA TO MONGODO SUCCESS ---------------------------');
-	    				//save success
-	    				//get all tag a href
-	    				let aaaa = [
-	    					'http://open.iot.10086.cn/',
-	    					'http://open.iot.10086.cn/bbs/forum.php',
-	    					'http://open.iot.10086.cn/bbs/forum.php?mod=viewthread&tid=563',
-	    					'http://open.iot.10086.cn/case'
-	    				];
-	    				resolve(aaaa);
+	    				console.log('==== SAVE DATA TO MONGODO SUCCESS ');
+	    				let aaaa = $('a').attr('href');
+	    				let aaaa2 = [];
+	    				for(let aurl of aaaa){
+	    					if(aurl.startsWith("/") || aurl.startsWith('#')){
+						        aurl = domain + aurl;
+						        aaaa2.push(aurl);
+						    } 
+	    				}
+	    				console.log(aaaa2);
+	    				resolve(aaaa2);
 	    			}
 	    		});
 	    	}
@@ -77,7 +86,6 @@ var test = function getStart(url)
 		    phantom_.exit();
 		}).catch(error => {
 			console.log('==== UNKONW ERROR');
-			console.log(error);
 			sitepage_.close();
 		    phantom_.exit();
 		    reject(new Error('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'));
@@ -85,15 +93,18 @@ var test = function getStart(url)
 	});
 
 	promise.then(function(d){
-		console.log('----------------------Promise OK,------------------------');
-		console.log(d);
+		console.log('==== Promise OK, get next start .... ');
 		MyQueue.push(d);
-		test(MyQueue.next());
+		let p = MyQueue.next();
+		console.log('---------------NEXT URL:' + p);
+		test(p);
 	}, function(e){	
 		console.log('==============error==============');
 		console.log(e);
-		console.log('----------restart next parse ---------------------');
-		test(MyQueue.next());
+		console.log('==== restart next parse ---------------------');
+		let p = MyQueue.next();
+		console.log('---------------NEXT URL:' + p);
+		test(p);
 	});
 }
 

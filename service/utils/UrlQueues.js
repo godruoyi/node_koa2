@@ -3,21 +3,21 @@ export default class {
 	constructor(router)
 	{
 		this.queue = [];
-		this.length = 0;
+		this.queue_data = [];
 	}
 
 	push (data)
 	{
-		if (this.queue.length >= 200) return this.queue.length;
-		if ((this.length + data.length) > 200)
+		if (this.queue_data.length >= 200) return this.queue_data.length;
+		if ((this.queue_data.length + data.length) > 200)
 		{
-			data = data.slice(0, (200 - this.length));
+			data = data.slice(0, (200 - this.queue_data.length));
 		}
 		for(let d of data)
 		{
-			if (!this.queue.includes(d)){
-				this.length ++;
+			if (!this.queue_data.includes(d)){
 				this.queue.push(d);
+				this.queue_data.push(d);
 			}
 		}
 	}
@@ -28,16 +28,18 @@ export default class {
 
 	getLength()
 	{
-		return this.length;
+		return this.queue_data.length;
 	}
 
 	next()
 	{
-		return this.queue.shift();
+		let u = this.queue.shift();
+		if(typeof(u) === 'undefined') return false;
+		return u;
 	}
 
 	getEmpty()
 	{
-		return this.length === 0;
+		return this.queue_data.length === 0;
 	}
 }

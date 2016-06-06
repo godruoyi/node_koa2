@@ -11,6 +11,7 @@ _codesync
 
 node_modules
 public/img/*
+public/downimage/*
 
 *.swp
 tags

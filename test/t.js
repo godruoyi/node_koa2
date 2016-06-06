@@ -501,19 +501,36 @@ var a = `
 `;
 
 
-// var aaa = a.match(/<a[^>]*href="([^"]*)"[^>]*>(.*?)<\/a>/g);
+
+// var reg_href = a.match(/<a[^>]*href="([^"]*)"[^>]*>(.*?)<\/a>/g);
 // var aaa = a.match(/<a[^>]*href="([^"]*)"[^>]*>(.*?)<\/a>/g);
 var reg_href = /<a([\s]+|[\s]+[^<>]+[\s]+)href=(\"([^<>"\']*)\"|\'([^<>"\']*)\')>/gi;
-// var reg_title = /<title([\s]+|[\s]+[^<>]+[\s]+)[^<>]*>/gi;
+// // var reg_title = /<title([\s]+|[\s]+[^<>]+[\s]+)[^<>]*>/gi;
 var aaa = a.toLowerCase().match(reg_href);
-console.log(aaa);
-if (aaa.length > 0)
-{
-  for(var aa of aaa)
-  {
-    
-  }
+for(var x of aaa){
+    x = x.replace(new RegExp("\"",'gm'), "");
+    x = x.replace(/(^\s+)|(\s+$)/g, "");
+    x = x.replace(/\s/g, "")
+    x = x.slice(x.indexOf('href')+5);
+    x = x.replace(">", "");
+    if(x.startsWith("/") || x.startsWith('#')){
+        x = 'http://godruoyi.com' + x;
+    }
+    console.log(x);
 }
+// var arr = [];
+// while(reg_href.exec(a)!=null)
+// {
+// arr.push(RegExp.$2);//如果是RegExp.$1那么匹配的就是href里的属性了!
+// }
+// console.log(arr);
+// if (aaa.length > 0)
+// {
+//   for(var aa of aaa)
+//   {
+    
+//   }
+// }
 
 
 // //<title>Godruoyi</title>
