@@ -3,8 +3,7 @@ var dbmodel = require('./../model/datas.js');
 var mymd5 = require('./utils/md5.js');
 var urlqueue = require('./utils/UrlQueues.js');
 var MyQueue = new urlqueue();
-var URLParse2 = require('./utils/UrlParse.js');
-var URLParse = new URLParse2();
+var URLParse = require('./utils/UrlParse.js');
 var cheerio = require('cheerio');
 
 
@@ -19,6 +18,8 @@ var test = function getStart(url)
 		console.log('==== Parse done .....');
 		return;
 	} 
+
+	
 	let	image = 'F:/Zend/apps/node/koa22/public/downimage/'+ mymd5(url) +'.jpg';
 	let promise = new Promise(function(resolve, reject){
 		let tmpdata_, sitepage_, phantom_;
@@ -63,24 +64,24 @@ var test = function getStart(url)
 	    		};
 	    		console.log(mo);
 	    		
-	    		model.save(mo, function(err){
-	    			if (err)
-	    			{
-	    				reject(new Error('save mongodb err'));
-	    			} else {
-	    				console.log('==== SAVE DATA TO MONGODO SUCCESS ');
-	    				let aaaa = $('a').attr('href');
-	    				let aaaa2 = [];
-	    				for(let aurl of aaaa){
-	    					if(aurl.startsWith("/") || aurl.startsWith('#')){
-						        aurl = domain + aurl;
-						        aaaa2.push(aurl);
-						    } 
-	    				}
-	    				console.log(aaaa2);
-	    				resolve(aaaa2);
-	    			}
-	    		});
+	    		// model.save(mo, function(err){
+	    		// 	if (err)
+	    		// 	{
+	    		// 		reject(new Error('save mongodb err'));
+	    		// 	} else {
+	    		// 		console.log('==== SAVE DATA TO MONGODO SUCCESS ');
+				let aaaa = $('a').attr('href');
+				let aaaa2 = [];
+				for(let aurl of aaaa){
+					if(aurl.startsWith("/") || aurl.startsWith('#')){
+				        aurl = domain + aurl;
+				        aaaa2.push(aurl);
+				    } 
+				}
+				console.log(aaaa2);
+				resolve(aaaa2);
+	    		// 	}
+	    		// });
 	    	}
 			sitepage_.close();
 		    phantom_.exit();

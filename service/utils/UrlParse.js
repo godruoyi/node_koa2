@@ -1,70 +1,58 @@
-var URLParse = function(){
-	this.regular_title = '';
-	this.regular_desc = '';
-	this.regular_keyword = '';
-	this.regular_content = /<[^>]+>/g;
-	this.regular_aherf = /<a([\s]+|[\s]+[^<>]+[\s]+)href=(\"([^<>"\']*)\"|\'([^<>"\']*)\')>/gi;
-}
+export default class {
 
-/**
- * 
- * @param  {[type]} url [description]
- * @return {[type]}     [description]
- */
-URLParse.prototype.getDomain = function(url){
-	if(!url.startsWith('http')){
-		url = 'http://' + url;
+	constructor(ssssss, domain = '')
+	{
+		this.document = ssssss;
+		this.domain = domain;
+		this.urlDatas = [];
 	}
-	let t = url.indexOf('/', 8);
-	url = url.substring(0, t)
-	return 'http://open.iot.10086.cn';
-}
 
-URLParse.prototype.getTitle = function(str){
-	return 'title';
-}
-
-URLParse.prototype.getContent = function(str){
-	return str.replace(this.regular_content, "")
-}
-
-URLParse.prototype.getDescription = function(str){
-	return 'desc';
-}
-
-URLParse.prototype.getkeyWord = function(str){
-	return 'keyword';
-}
-
-/**
- * 解析文本所有a标签herf属性， 根据domian设置url
- * 
- * @param  string str
- * @param  string domain
- * @return array
- */
-URLParse.prototype.getAllHerf = function(str, domain){
-	console.log('-------------------------------------------------------------------------');
-	let data = str.match(this.regular_aherf);
-	let data2 = [];
-	for(let x of data){
-	    x = x.replace(new RegExp("\"",'gm'), "");
-	    x = x.replace(new RegExp("'",'gm'), "");
-	    x = x.replace(/(^\s+)|(\s+$)/g, "");
-	    x = x.replace(/\s/g, "")
-	    x = x.slice(x.indexOf('href')+5);
-	    x = x.replace(">", "");
-	    if(x.startsWith("/") || x.startsWith('#')){
-	        x = domain + x;
-	    } 
-	    if(x.indexOf('http') != 0){
-	    	x = domain + x;
-	    }
-	    console.log(x);
-	    data2.push(x);
+	getTitle (){
+		return this.document('title').text();
 	}
-	console.log('-------------------------------------------------------------------------');
-	return data2;
-}
 
-module.exports = URLParse;
+	getContent (){
+		return 'content';
+	}
+
+	getDescription (){
+		return this.document('meta[name="description"]').attr('content');
+	}
+
+	getkeyWord (){
+		return this.document('meta[name="keywords"]').attr('content');
+	}
+
+	getAllHerf (){
+		let urlQueen = [];
+		let wocao = this.document;
+		let doman = this.domain;
+
+		this.document('a[href!="javascript:;"][href!=""]').map(function(i, self){
+
+			let _this = wocao(self);
+			let _herf = _this.attr('href');
+			if(_herf.startsWith('/')){
+				_herf = doman + _herf;
+			}
+			if((_herf.startsWith(doman)) && (!_herf.endsWith('.apk'))){
+				urlQueen.push(_herf);
+			}
+		});
+		return this.sortArr(urlQueen);
+	}
+
+	sortArr(array)
+	{
+		array.sort();
+		let re = [array[0]];
+		for(let i = 1; i < array.length; i++)
+		{
+			if( array[i] !== re[re.length-1])
+			{
+				re.push(array[i]);
+			}
+		}
+		return re;
+	}
+}
