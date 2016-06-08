@@ -9,6 +9,14 @@ module.exports = {
 			width: 1024, 
 			height: 768
 		},
+	},
+
+	urlqueueMaxLength: 20,
+
+
+	mongodb: {
+		host: "127.0.0.1",
+		dbname: "pachong_db_store",
 	}
 	
 

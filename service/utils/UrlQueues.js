@@ -4,15 +4,16 @@ export default class {
 	{
 		this.queue = [];
 		this.queue_p = [];
+		this.config = require('./../../config/config.js');
 
 	}
 
 	push (data)
 	{
 		let l = data.length;
-		if( (l + this.getLength()) >= 200)
+		if( (l + this.getLength()) >= this.config.urlqueueMaxLength)
 		{
-			data = data.slice(0, (201 - this.getLength()));
+			data = data.slice(0, (this.config.urlqueueMaxLength - this.getLength()));
 		}
 		for(let a of data){
 			if(!this.queue.includes(a)){

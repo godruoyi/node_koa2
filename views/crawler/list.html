@@ -1,17 +1,24 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>{{title}}</title>
-</head>
-<body>
+{% extends '../layout.html' %}
 
-<h1>------------------------------DATA-------------------------------</h1>
+{% block body %}
 
-{% if data %}
-{% for d in data %}
-{{d}}
-{% endfor %}
-{% endif %}
-
-</body>
-</html>
+<table class="table" style="margin-top: 100px;">
+   <caption>爬取列表</caption>
+   <thead>
+      <tr>
+         <th>url</th>
+         <th>状态</th>
+         <th>操作</th>
+      </tr>
+   </thead>
+   <tbody>
+      {% for item in data %}
+      <tr>
+		<td> {{  item.domain }} </td> 
+		<td> {{  item.isok }} </td> 
+		<td> 查看 </td> 
+	  </tr>
+      {% endfor %}
+   </tbody>
+</table>
+{% endblock %}

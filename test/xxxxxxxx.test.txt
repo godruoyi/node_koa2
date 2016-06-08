@@ -1,0 +1,16 @@
+/*superagent.get(url).end(function(err, result){
+			if(err) {
+				console.log('Get \'' + url + '\' Error,');
+				reject(new Error(`Get ${url} error ....`));
+			} else {
+				let $ = cheerio.load(result.text);
+				let uparsedone = new URLParse($, domain);
+				UrlQueues.push(uparsedone.getAllHerf());
+				let data = {
+					title: $('title').text(),
+					currentUrl: url,
+					image: image
+				};
+				resolve(data);
+			}
+		});*/

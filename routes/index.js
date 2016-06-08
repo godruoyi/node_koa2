@@ -8,6 +8,36 @@ export default class extends BaseController{
 		this.router.get('/', async function (ctx, next) {
 			var dataModel = new DatasModel();
 
+			let sssssssssss = 0;
+			await dataModel.count({domain: 'http://open.iot.10086.cn'}, function(err, resout){
+				if(err){
+					console.log(err);
+					console.log('------------count error ------------');
+				} else {
+					console.log('------------count success ------------');
+					console.log(resout);
+					sssssssssss = resout;
+				}
+			});
+			console.log('kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk');
+
+			console.log('----------------------------------sssssssssss:', sssssssssss);
+
+
+			// console.log('--------------------------------------------------------------\n');
+
+
+			// dataModel.find({domain: 'http://open.iot.10086.cn'}, function(err, resout){
+			// 	if(err){
+			// 		console.log(err);
+			// 		console.log('------------find error ------------');
+			// 	} else {
+			// 		console.log('------------find success ------------');
+			// 		console.log(resout);
+			// 	}
+			// });
+
+
 
 			/*dataModel.delete({_id: '574fc26011810fdc2b032bf0'}, function(err){
 				if(err){
