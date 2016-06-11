@@ -1,0 +1,28 @@
+{% extends '../layout.html' %}
+
+{% block body %}
+
+<table class="table" style="margin-top: 50px;">
+   <caption>{{ url }}</caption>
+   <thead>
+      <tr>
+         <th>title</th>
+         <th>desc</th>
+         <th>url</th>
+         <th>content</th>
+         <th>img</th>
+      </tr>
+   </thead>
+   <tbody>
+      {% for item in data %}
+         <tr>
+            <td> {{  item.title }} </td> 
+            <td> {{  item.desc }} </td> 
+            <td> {{  item.url }} </td> 
+            <td> {{  item.content }} </td> 
+      		<td> {{  item.img }} </td> 
+        </tr>
+      {% endfor %}
+   </tbody>
+</table>
+{% endblock %}

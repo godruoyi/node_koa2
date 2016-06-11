@@ -11,7 +11,7 @@ module.exports = {
 		},
 	},
 
-	urlqueueMaxLength: 20,
+	urlqueueMaxLength: 300,
 
 
 	mongodb: {

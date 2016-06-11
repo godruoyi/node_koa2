@@ -17,10 +17,11 @@ let gotoanywhere = function(url, domain2){
 
 	let count = 0;
 	const domain = domain2;
+	let rekouurl = url;
 
 	let checkModel = new isok();
 	checkModel.save({
-		domain: domain,
+		indexurl: rekouurl,
 		isok : 'CONTINUE'
 	}, function(err, id){
 		if(err){
@@ -28,7 +29,7 @@ let gotoanywhere = function(url, domain2){
 		}
 	});
 
-	let dogoto = function(url){
+	let dogoto =  function(url){
 		count ++;
 		console.log(`第${count}次开始解析：${url} `);
 		// let image = await phantom(url); 
@@ -89,16 +90,17 @@ let gotoanywhere = function(url, domain2){
 			let pachomgModel = new model();
 			pachomgModel.save({
 				title : result.title,
-				desc    : result.desc,
+				// desc    : result.desc,
+				desc    : '描述信息',
 				url    : result.currentUrl,
 				content  : result.content,
 				img     : result.image,
-				domain : domain,
+				indexurl : rekouurl,
 			}, function(err, id){
 				if(err){
 					console.log('数据库保存失败， 继续下一个。。。。。');
 				} else {
-					console.log('数据库保存成功: ' + id);
+					console.log('数据库保存成功promise then success: ' + id);
 				}
 			});
 
@@ -107,7 +109,7 @@ let gotoanywhere = function(url, domain2){
 				console.log('全部解析完成。。。。。');
 
 				let pachomgModelcount = new model();
-				pachomgModelcount.count({domain: domain}, function(err, c){
+				pachomgModelcount.count({indexurl: rekouurl}, function(err, c){
 					if(err){
 						console.log('Find mongodb count error ......');
 						console.log(err);
@@ -116,17 +118,21 @@ let gotoanywhere = function(url, domain2){
 					}
 				});
 				console.log('Url队列长度： ' + UrlQueues.getLength());
+				console.log(UrlQueues.getData());
 				
 				let isokModel = new isok();
-				isokModel.save({
-					domain: domain,
-					isok : 'SUCCESS'
-				}, function(err, id){
-					if(err){
-						console.log('ISOK表保存出错。。。。。' + err);
+				isokModel.update(
+					{ indexurl: rekouurl}, 
+					{
+						isok: 'SUCCESS'
+					}, function(err, id){
+						if(err){
+							console.log('ISOK表保存出错。。。。。' + err);
+						}
 					}
-				});
+				);
 			} else {
+				console.log('nexturl: ' + nexturl);
 				dogoto(nexturl);
 			}
 		}, function(err){
@@ -135,7 +141,7 @@ let gotoanywhere = function(url, domain2){
 			let nexturl = UrlQueues.next();
 			if(!nexturl){
 				console.log('全部解析完成。。。。。');
-				pachomgModel.count({domain: domain}, function(err, c){
+				pachomgModel.count({indexurl: rekouurl}, function(err, c){
 					if(err){
 						console.log('Find mongodb count error ......');
 						console.log(err);
@@ -144,17 +150,21 @@ let gotoanywhere = function(url, domain2){
 					}
 				});
 				console.log('Url队列长度： ' + UrlQueues.getLength());
+				console.log(UrlQueues.getData());
 				
 				let isokModel = new isok();
-				isokModel.save({
-					domain: domain,
-					isok : 'SUCCESS'
-				}, function(err, id){
-					if(err){
-						console.log('ISOK表保存出错。。。。。' + err);
+				isokModel.update(
+					{ indexurl: rekouurl}, 
+					{
+						isok: 'SUCCESS'
+					}, function(err, id){
+						if(err){
+							console.log('ISOK表保存出错。。。。。' + err);
+						}
 					}
-				});
+				);
 			} else {
+				console.log('nexturl: ' + nexturl);
 				dogoto(nexturl);
 			}
 		});

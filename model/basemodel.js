@@ -20,11 +20,11 @@ export default class BaseModel
 	  this.mongooseModel = this.db.model(this.tableName, mongooseSchema2);
   }
 
-  save(doc, callback)
+  async save(doc, callback)
   {
     var _db = this.db;
     var _id = this.Schema.Types.ObjectId;
-    this.mongooseModel.create(doc, function(error){
+    await this.mongooseModel.create(doc, function(error){
       if(error) {
         console.log(error);
         callback(error);
@@ -32,8 +32,8 @@ export default class BaseModel
         console.log('save ok');
         callback(null, _id);
       }
-      _db.close();
     });
+    _db.close();
   	
   }
 
@@ -63,6 +63,20 @@ export default class BaseModel
       	callback(err);
       } else {
       	callback(null, result); 
+      }
+    });
+    _db.close();
+  }
+
+
+  async findOne(where, callback)
+  {
+    var _db = this.db;
+    await this.mongooseModel.findOne(where, function(err, doc){
+      if(err){
+        callback('mongodb find one error ...');
+      } else {
+        callback(null, doc);
       }
     });
     _db.close();

@@ -4,7 +4,7 @@ import BaseController from '../service/BaseController'
 import T from './../service/T.js';
 import isok from './../model/isok.js';
 import async from 'async';  
-
+import table from './../model/datas.js';
 
 
 export default class extends BaseController{
@@ -26,15 +26,18 @@ export default class extends BaseController{
 				let isokModel = new isok();
 				let data = {errno : 0, msg: 'success', data: [] };
 
-				await isokModel.count({domain: domain}, function(err, c){
-
+				await isokModel.findOne({indexurl: url}, function(err, doc){
+					console.log(doc);
 					if(err)
 					{
+						console.log(err);
 						data.msg = 'DB COUNT ERROR';
-					} else if(c > 0) {
-						data.msg = '该URL已经爬取过了， 你需要重新爬取吗';
-					} else {
+					} else if(!doc  ) {
 						data.errno = 200;
+					} else if(doc.isok === 'CONTINUE'){
+						data.msg = '该URL正在爬取...';
+					} else {
+						data.msg = '该URL已经爬取过了， 你需要重新爬取吗';
 					}
 				});
 
@@ -67,6 +70,31 @@ export default class extends BaseController{
 				data : data
 			};
 			await ctx.render('crawler/list', {
+			});
+		});
+
+
+		this.router.get('/crawler/data', async function(ctx, next){
+			// let url = ctx.request.url;
+			let url = 'http://www.godruoyi.com';
+			console.log('Get url: ' + url);
+
+			let tableModel = new table();
+			let data = null;
+			await tableModel.find({indexurl: url}, function(err, result){
+				if(err){
+					console.log('mongodb find null by indexurl : ' + url);
+				} else {
+					data = result;
+				}
+			});
+
+			ctx.state = {
+				title: `crawler list data by url '${url}'`,
+				url : url,
+				data : data
+			};
+			await ctx.render('crawler/data', {
 			});
 		});
 

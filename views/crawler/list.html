@@ -2,7 +2,7 @@
 
 {% block body %}
 
-<table class="table" style="margin-top: 100px;">
+<table class="table" style="margin-top: 50px;">
    <caption>爬取列表</caption>
    <thead>
       <tr>
@@ -14,9 +14,13 @@
    <tbody>
       {% for item in data %}
       <tr>
-		<td> {{  item.domain }} </td> 
-		<td> {{  item.isok }} </td> 
-		<td> 查看 </td> 
+		<td> {{  item.indexurl }} </td> 
+      {% if item.isok === 'CONTINUE' %}
+		<td> 爬取中 </td> 
+      {% else %}
+      <td> 已完成</td>
+      {% endif %}
+		<td> <a href="/crawler/data?url={{ item.indexurl }}">爬取结果</a> </td> 
 	  </tr>
       {% endfor %}
    </tbody>

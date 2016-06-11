@@ -16,6 +16,9 @@ export default class {
 			data = data.slice(0, (this.config.urlqueueMaxLength - this.getLength()));
 		}
 		for(let a of data){
+			if(typeof(a) === 'undefined') continue;
+			if((a.endsWith('.jpg')) || (a.endsWith('.gif'))) continue;
+
 			if(!this.queue.includes(a)){
 				this.queue.push(a);
 				this.queue_p.push(a);

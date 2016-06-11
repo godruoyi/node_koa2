@@ -5,7 +5,7 @@ export default class extends BaseModel{
   constructor()
   {
   	let mongooseSchema = {
-      domain : {type : String}, 
+      indexurl : {type : String}, 
       isok : {type : String},
       date : {type : Date, default: Date.now}
   	};
