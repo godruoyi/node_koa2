@@ -2,6 +2,12 @@
 
 > install mongoose
 
+> install async
+
+> install cheerio
+
+> install superagent
+
 > npm install phantom --save
 
 [phantom](https://github.com/amir20/phantomjs-node)

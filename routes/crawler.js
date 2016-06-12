@@ -88,6 +88,7 @@ export default class extends BaseController{
 					data = result;
 				}
 			});
+			console.log(data);
 
 			ctx.state = {
 				title: `crawler list data by url '${url}'`,
