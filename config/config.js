@@ -2,7 +2,7 @@ module.exports = {
 
 	//
 	phantom : {
-		saveimgpath: "F:/Zend/apps/node/koa22/public/downimage/",
+		saveimgpath: "F:/tmp/imgs/1/",
 		imagesuffix: ".jpg",
 		zoomFactor: 1,
 		viewportSize: {
@@ -11,8 +11,7 @@ module.exports = {
 		},
 	},
 
-	urlqueueMaxLength: 300,
-
+	urlqueueMaxLength: 1000,
 
 	mongodb: {
 		host: "127.0.0.1",

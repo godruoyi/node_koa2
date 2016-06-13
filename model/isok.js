@@ -9,7 +9,7 @@ export default class extends BaseModel{
       isok : {type : String},
       date : {type : Date, default: Date.now}
   	};
-  	super('ISOK', mongooseSchema);
+  	super('crawler_success2', mongooseSchema);
   }
 
 }

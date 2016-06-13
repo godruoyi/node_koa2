@@ -13,7 +13,7 @@ export default class extends BaseModel{
       indexurl : {type : String}, 
       data : {type : Date, default: Date.now}
   	};
-  	super('table2', mongooseSchema);
+  	super('crawler_data2', mongooseSchema);
   }
 
 }

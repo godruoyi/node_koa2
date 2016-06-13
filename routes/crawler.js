@@ -76,19 +76,19 @@ export default class extends BaseController{
 
 		this.router.get('/crawler/data', async function(ctx, next){
 			// let url = ctx.request.url;
-			let url = 'http://www.godruoyi.com';
+			let url = 'http://open.iot.10086.cn';
 			console.log('Get url: ' + url);
 
 			let tableModel = new table();
 			let data = null;
 			await tableModel.find({indexurl: url}, function(err, result){
 				if(err){
+					console.log(err);
 					console.log('mongodb find null by indexurl : ' + url);
 				} else {
 					data = result;
 				}
 			});
-			console.log(data);
 
 			ctx.state = {
 				title: `crawler list data by url '${url}'`,

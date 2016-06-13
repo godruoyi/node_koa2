@@ -11,7 +11,7 @@ let URLParse = require('./utils/UrlParse.js');
 let UrlQueues2 = require('./utils/UrlQueues.js');
 // let phantom = require('./phantom.js');
 let UrlQueues = new UrlQueues2();
-
+let whileTag = 5;
 
 let gotoanywhere = function(url, domain2){
 
@@ -30,12 +30,14 @@ let gotoanywhere = function(url, domain2){
 	});
 
 	let dogoto =  function(url){
+
 		count ++;
 		console.log(`第${count}次开始解析：${url} `);
 		// let image = await phantom(url); 
 
-		let promise = new Promise(function(resolve, reject){
 
+		let promise = new Promise(function(resolve, reject){
+			whileTag --;
 			let phantom_, 
 			sitepage_,
 			image = config.phantom.saveimgpath + mymd5(url) + config.phantom.imagesuffix;
@@ -87,6 +89,7 @@ let gotoanywhere = function(url, domain2){
 		});
 
 		promise.then(function(result){
+			whileTag ++;
 			let pachomgModel = new model();
 			pachomgModel.save({
 				title : result.title,
@@ -133,7 +136,38 @@ let gotoanywhere = function(url, domain2){
 				);
 			} else {
 				console.log('nexturl: ' + nexturl);
-				dogoto(nexturl);
+				console.log(`当前并发数: ${whileTag}`);
+
+				switch(whileTag) {
+					case 1: 
+						dogoto(nexturl);
+						break;
+					case 2: 
+						dogoto(nexturl);
+						dogoto(UrlQueues.next());
+						break;
+					case 3: 
+						dogoto(nexturl);
+						dogoto(UrlQueues.next());
+						dogoto(UrlQueues.next());
+						break;
+					case 4: 
+						dogoto(nexturl);
+						dogoto(UrlQueues.next());
+						dogoto(UrlQueues.next());
+						dogoto(UrlQueues.next());
+						break;
+					case 5: 
+						dogoto(nexturl);
+						dogoto(UrlQueues.next());
+						dogoto(UrlQueues.next());
+						dogoto(UrlQueues.next());
+						dogoto(UrlQueues.next());
+						break;
+				}
+				// setTimeout(function(){
+				// 	dogoto(nexturl);
+		  //       },1000);
 			}
 		}, function(err){
 			console.log('Promise 解析出错， 继续下一个......');
@@ -165,13 +199,42 @@ let gotoanywhere = function(url, domain2){
 				);
 			} else {
 				console.log('nexturl: ' + nexturl);
-				dogoto(nexturl);
+				console.log(`当前并发数: ${whileTag}`);
+				switch(whileTag) {
+					case 1: 
+						dogoto(nexturl);
+						break;
+					case 2: 
+						dogoto(nexturl);
+						dogoto(UrlQueues.next());
+						break;
+					case 3: 
+						dogoto(nexturl);
+						dogoto(UrlQueues.next());
+						dogoto(UrlQueues.next());
+						break;
+					case 4: 
+						dogoto(nexturl);
+						dogoto(UrlQueues.next());
+						dogoto(UrlQueues.next());
+						dogoto(UrlQueues.next());
+						break;
+					case 5: 
+						dogoto(nexturl);
+						dogoto(UrlQueues.next());
+						dogoto(UrlQueues.next());
+						dogoto(UrlQueues.next());
+						dogoto(UrlQueues.next());
+						break;
+				}
+
+				// setTimeout(function(){
+				// 	dogoto(nexturl);
+		  //       },1000);
 			}
 		});
 	}
-
 	dogoto(url);
-	
 }
 
 
