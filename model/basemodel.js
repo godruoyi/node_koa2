@@ -26,10 +26,10 @@ export default class BaseModel
     var _id = this.Schema.Types.ObjectId;
     await this.mongooseModel.create(doc, function(error){
       if(error) {
-        console.log(error);
+        // console.log(error);
         callback(error);
       } else {
-        console.log('save ok');
+        // console.log('save ok');
         callback(null, _id);
       }
     });
@@ -44,9 +44,9 @@ export default class BaseModel
     var options = {upsert : true};
     this.mongooseModel.update(where, update, options, function(error){
     if(error) {
-        callback('update error .... '+error);
+        // callback('update error .... '+error);
     } else {
-        console.log('update ok!');
+        // console.log('update ok!');
     }
       _db.close();
     });
@@ -59,7 +59,7 @@ export default class BaseModel
     await this.mongooseModel.find(where, fields, options, function(err, result){
       if(err)
       {
-        callback('find data error .... ');
+        // callback('find data error .... ');
       	callback(err);
       } else {
       	callback(null, result); 
@@ -89,7 +89,7 @@ export default class BaseModel
       if(err){
         callback(err);
       } else {
-        console.log('DB COUNT OK :' + c);
+        // console.log('DB COUNT OK :' + c);
         callback(null, c);
       }
     });
@@ -104,7 +104,7 @@ export default class BaseModel
   	  if(err){
         callback('delete shi bai ....');
   	  } else {
-  	  	console.log('delete SUCCESS ....');
+  	  	// console.log('delete SUCCESS ....');
   	  }
       _db.close();
   	});

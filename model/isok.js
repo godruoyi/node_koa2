@@ -1,5 +1,9 @@
 import BaseModel from './basemodel.js';
 
+
+/**
+ *  判断爬取是否完成标记Model
+ */
 export default class extends BaseModel{
 
   constructor()
@@ -9,7 +13,7 @@ export default class extends BaseModel{
       isok : {type : String},
       date : {type : Date, default: Date.now}
   	};
-  	super('crawler_success2', mongooseSchema);
+  	super('crawler_success_one', mongooseSchema);
   }
 
 }

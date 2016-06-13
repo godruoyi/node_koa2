@@ -13,6 +13,8 @@ let UrlQueues2 = require('./utils/UrlQueues.js');
 let UrlQueues = new UrlQueues2();
 let whileTag = 5;
 
+
+//待改进
 let gotoanywhere = function(url, domain2){
 
 	let count = 0;
@@ -25,7 +27,7 @@ let gotoanywhere = function(url, domain2){
 		isok : 'CONTINUE'
 	}, function(err, id){
 		if(err){
-			console.log('ISOK表保存出错。。。。。' + err);
+			// console.log('ISOK表保存出错。。。。。' + err);
 		}
 	});
 
@@ -34,7 +36,6 @@ let gotoanywhere = function(url, domain2){
 		count ++;
 		console.log(`第${count}次开始解析：${url} `);
 		// let image = await phantom(url); 
-
 
 		let promise = new Promise(function(resolve, reject){
 			whileTag --;
@@ -53,7 +54,7 @@ let gotoanywhere = function(url, domain2){
 			}).then(status => {
 				if(status !== 'success')
 				{
-					console.log('phantom 解析出错。。。。。。。。');
+					// console.log('phantom 解析出错。。。。。。。。');
 					return false;
 				} else {
 					sitepage_.render(image);
@@ -103,7 +104,7 @@ let gotoanywhere = function(url, domain2){
 				if(err){
 					console.log('数据库保存失败， 继续下一个。。。。。');
 				} else {
-					console.log('数据库保存成功promise then success: ' + id);
+					console.log('数据库保存成功， 继续下一个。。。。。');
 				}
 			});
 
@@ -130,13 +131,12 @@ let gotoanywhere = function(url, domain2){
 						isok: 'SUCCESS'
 					}, function(err, id){
 						if(err){
-							console.log('ISOK表保存出错。。。。。' + err);
+							// console.log('ISOK表保存出错。。。。。' + err);
 						}
 					}
 				);
 			} else {
-				console.log('nexturl: ' + nexturl);
-				console.log(`当前并发数: ${whileTag}`);
+				console.log('下一个URL: ' + nexturl);
 
 				switch(whileTag) {
 					case 1: 
@@ -165,9 +165,6 @@ let gotoanywhere = function(url, domain2){
 						dogoto(UrlQueues.next());
 						break;
 				}
-				// setTimeout(function(){
-				// 	dogoto(nexturl);
-		  //       },1000);
 			}
 		}, function(err){
 			console.log('Promise 解析出错， 继续下一个......');
@@ -177,7 +174,6 @@ let gotoanywhere = function(url, domain2){
 				console.log('全部解析完成。。。。。');
 				pachomgModel.count({indexurl: rekouurl}, function(err, c){
 					if(err){
-						console.log('Find mongodb count error ......');
 						console.log(err);
 					} else {
 						console.log('结果数据长度： ' + c);
@@ -193,13 +189,12 @@ let gotoanywhere = function(url, domain2){
 						isok: 'SUCCESS'
 					}, function(err, id){
 						if(err){
-							console.log('ISOK表保存出错。。。。。' + err);
+							// console.log('ISOK表保存出错。。。。。' + err);
 						}
 					}
 				);
 			} else {
-				console.log('nexturl: ' + nexturl);
-				console.log(`当前并发数: ${whileTag}`);
+				console.log('下一个URL: ' + nexturl);
 				switch(whileTag) {
 					case 1: 
 						dogoto(nexturl);
@@ -227,10 +222,6 @@ let gotoanywhere = function(url, domain2){
 						dogoto(UrlQueues.next());
 						break;
 				}
-
-				// setTimeout(function(){
-				// 	dogoto(nexturl);
-		  //       },1000);
 			}
 		});
 	}

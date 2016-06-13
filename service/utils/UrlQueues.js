@@ -10,6 +10,7 @@ export default class {
 
 	push (data)
 	{
+		if(!data) return false;
 		let l = data.length;
 		if( (l + this.getLength()) >= this.config.urlqueueMaxLength)
 		{
