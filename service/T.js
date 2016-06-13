@@ -122,7 +122,7 @@ let gotoanywhere = function(url, domain2){
 					}
 				});
 				console.log('Url队列长度： ' + UrlQueues.getLength());
-				console.log(UrlQueues.getData());
+				// console.log(UrlQueues.getData());
 				
 				let isokModel = new isok();
 				isokModel.update(
@@ -180,7 +180,7 @@ let gotoanywhere = function(url, domain2){
 					}
 				});
 				console.log('Url队列长度： ' + UrlQueues.getLength());
-				console.log(UrlQueues.getData());
+				// console.log(UrlQueues.getData());
 				
 				let isokModel = new isok();
 				isokModel.update(
