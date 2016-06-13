@@ -69,6 +69,24 @@ export default class BaseModel
   }
 
 
+  async findByPage(options, page = 1, page_size = 10)
+  {
+    let _db = this.db;
+    let data = [];
+    await this.mongooseModel.find(options.where, options.fields, {skip: page, limit: page_size} , function(err, result) {
+      if(err) {
+        console.log(err);
+      } else {
+        console.log(result);
+        console.log('\n-----------------------------------\n');
+        data = result;
+      }
+    });
+    _db.close();
+    console.log('data length: ' + data.length);
+    return data;
+  }
+
   async findOne(where, callback)
   {
     var _db = this.db;
@@ -81,6 +99,7 @@ export default class BaseModel
     });
     _db.close();
   }
+
 
   async count(where, callback)
   {
