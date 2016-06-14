@@ -31,7 +31,9 @@ export default class {
 	}
 
 	getContent (){
-		return 'content';
+
+		let $ = this.document;
+		return $('table').text();
 	}
 
 	getDescription (){
@@ -73,9 +75,9 @@ export default class {
 				_herf = tt + '/' + _herf; //
 			}
 
-			if(_herf.startsWith('home.php')){
-				_herf = tt + '/' + _herf; //
-			}
+			// if(_herf.startsWith('home.php')){
+			// 	_herf = tt + '/' + _herf; //
+			// }
 
 			if((_herf.startsWith(tt))){
 				urlQueen.push(_herf);

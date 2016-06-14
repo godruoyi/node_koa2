@@ -11,14 +11,24 @@ export default class extends BaseController{
 			ctx.state = {
 				title: 'CRAWLER'
 			};
-			await ctx.render('crawler/index', {
+			await ctx.render('master', {
 			});
 		});
 
 
+		this.router.post('/mapsearch', async function(ctx, next){
+
+			let data = {errno : 0, msg: 'success', data: [] };
+			setTimeout(function(){
+				ctx.body = data;
+			}(ctx), 0);
+			console.log("aaa")	
+		});
+
+
 		this.router.post('/crawler/start', async function(ctx, next){
-				// let domain = ctx.request.body.domain;
-				let domain = 'http://open.iot.10086.cn';
+				let domain = ctx.request.body.domain;
+				// let domain = 'http://open.iot.10086.cn';
 				
 				let url = ctx.request.body.url;
 				let isokModel = new isok();
