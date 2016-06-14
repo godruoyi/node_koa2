@@ -27,11 +27,13 @@ export default class extends BaseController{
 
 
 		this.router.post('/crawler/start', async function(ctx, next){
-				let domain = ctx.request.body.domain;
-				// let domain = 'http://open.iot.10086.cn';
+				// let domain = ctx.request.body.domain;
+				let domain = 'http://open.iot.10086.cn';
+				// let url = ctx.request.body.url;
+				let url = 'http://open.iot.10086.cn/bbs/forum.php';
 				
-				let url = ctx.request.body.url;
 				let isokModel = new isok();
+
 				let data = {errno : 0, msg: 'success', data: [] };
 
 				await isokModel.findOne({indexurl: url}, function(err, doc){

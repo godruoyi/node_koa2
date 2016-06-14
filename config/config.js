@@ -2,7 +2,7 @@ module.exports = {
 
 	//
 	phantom : {
-		saveimgpath: "F:/tmp/imgs/1/",
+		saveimgpath: "/../../public/img/project/",
 		imagesuffix: ".jpg",
 		zoomFactor: 1,
 		viewportSize: {

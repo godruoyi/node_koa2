@@ -77,7 +77,8 @@ let gotoanywhere = function(url, domain2){
 						currentUrl: url,
 						image: image,
 						desc : uparsedone.getDescription(),
-						content: uparsedone.getContent(),
+						// content: uparsedone.getContent(),
+						content: content.replace(/<[^>]+>/g,"")
 					};
 					resolve(data);
 				}

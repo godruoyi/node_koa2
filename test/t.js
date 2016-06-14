@@ -501,23 +501,30 @@ var a = `
 `;
 
 
+aaa.indexOf(a);
+
+
+
+
+
+
 
 // var reg_href = a.match(/<a[^>]*href="([^"]*)"[^>]*>(.*?)<\/a>/g);
 // var aaa = a.match(/<a[^>]*href="([^"]*)"[^>]*>(.*?)<\/a>/g);
-var reg_href = /<a([\s]+|[\s]+[^<>]+[\s]+)href=(\"([^<>"\']*)\"|\'([^<>"\']*)\')>/gi;
-// // var reg_title = /<title([\s]+|[\s]+[^<>]+[\s]+)[^<>]*>/gi;
-var aaa = a.toLowerCase().match(reg_href);
-for(var x of aaa){
-    x = x.replace(new RegExp("\"",'gm'), "");
-    x = x.replace(/(^\s+)|(\s+$)/g, "");
-    x = x.replace(/\s/g, "")
-    x = x.slice(x.indexOf('href')+5);
-    x = x.replace(">", "");
-    if(x.startsWith("/") || x.startsWith('#')){
-        x = 'http://godruoyi.com' + x;
-    }
-    console.log(x);
-}
+// var reg_href = /<a([\s]+|[\s]+[^<>]+[\s]+)href=(\"([^<>"\']*)\"|\'([^<>"\']*)\')>/gi;
+// // // var reg_title = /<title([\s]+|[\s]+[^<>]+[\s]+)[^<>]*>/gi;
+// var aaa = a.toLowerCase().match(reg_href);
+// for(var x of aaa){
+//     x = x.replace(new RegExp("\"",'gm'), "");
+//     x = x.replace(/(^\s+)|(\s+$)/g, "");
+//     x = x.replace(/\s/g, "")
+//     x = x.slice(x.indexOf('href')+5);
+//     x = x.replace(">", "");
+//     if(x.startsWith("/") || x.startsWith('#')){
+//         x = 'http://godruoyi.com' + x;
+//     }
+//     console.log(x);
+// }
 // var arr = [];
 // while(reg_href.exec(a)!=null)
 // {
