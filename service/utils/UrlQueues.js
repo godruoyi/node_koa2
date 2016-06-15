@@ -52,4 +52,9 @@ export default class {
 	{
 		return this.queue.length === 0;
 	}
+
+	getNoLength()
+	{
+		return this.queue_p.length;
+	}
 }

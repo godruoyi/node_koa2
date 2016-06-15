@@ -20,59 +20,61 @@ export default class BaseModel
 	  this.mongooseModel = this.db.model(this.tableName, mongooseSchema2);
   }
 
-  async save(doc, callback)
+  async save(doc)
   {
     var _db = this.db;
     var _id = this.Schema.Types.ObjectId;
+    var _doc = false;
     await this.mongooseModel.create(doc, function(error){
       if(error) {
-        // console.log(error);
-        callback(error);
+        console.log('Save mongodb error: '+error);
       } else {
-        // console.log('save ok');
-        callback(null, _id);
+        _doc = true;
       }
     });
     _db.close();
-  	
+  	return _doc;
   }
 
-  update(where, update, callback)
+  async update(where, update)
   {
     var _db = this.db;
     update = {$set: update};
     var options = {upsert : true};
-    this.mongooseModel.update(where, update, options, function(error){
+    var isok = false;
+    await this.mongooseModel.update(where, update, options, function(error){
     if(error) {
-        // callback('update error .... '+error);
+        console.log('Update mongodb Error: ' + error);
     } else {
-        // console.log('update ok!');
+        isok = true;
     }
-      _db.close();
     });
+    _db.close();
+    return isok;
   }
 
-  async find(where, callback)
+  async find(where)
   {
     var _db = this.db;
   	var fields = {}, options = {};
+    var _result = false;
     await this.mongooseModel.find(where, fields, options, function(err, result){
       if(err)
       {
-        // callback('find data error .... ');
-      	callback(err);
+        console.log('Find mongodb error: ' + err);
       } else {
-      	callback(null, result); 
+        _result = result;
       }
     });
     _db.close();
+    return _result;
   }
 
 
   async findByPage(options, page = 1, page_size = 10)
   {
     let _db = this.db;
-    let data = [];
+    let data = false;
     await this.mongooseModel.find(options.where, options.fields, {skip: page, limit: page_size} , function(err, result) {
       if(err) {
         console.log(err);
@@ -87,43 +89,48 @@ export default class BaseModel
   async findOne(where, callback)
   {
     var _db = this.db;
+    var _doc = false;
     await this.mongooseModel.findOne(where, function(err, doc){
       if(err){
-        callback('mongodb find one error ...');
+        callback('FindOne mongodb Error: ' + err);
       } else {
-        callback(null, doc);
+        _doc = doc;
       }
     });
     _db.close();
+    return _doc;
   }
 
 
   async count(where, callback)
   {
     var _db = this.db;
+    var count = 0;
     await this.mongooseModel.count(where, function(err, c) {
-      _db.close();
+      
       if(err){
-        callback(err);
+        console.log('Count mongodb Error: ' + er);
       } else {
-        // console.log('DB COUNT OK :' + c);
-        callback(null, c);
+        count = c;
       }
     });
-    
+    _db.close();
+    return count;
   }
 
-  delete(where, callback)
+  async delete(where, callback)
   {
     var _db = this.db;
-  	this.mongooseModel.remove(where, function(err, docs){
+    var _isok = false;
+  	await this.mongooseModel.remove(where, function(err, docs){
   	  if(err){
-        callback('delete shi bai ....');
+        console.log('Delete mongodb Error: ' + err);
   	  } else {
-  	  	// console.log('delete SUCCESS ....');
+  	  	_isok = true;
   	  }
-      _db.close();
-  	});
+    });
+    _db.close();  
+    return _isok;
   }
 
   /**

@@ -1,6 +1,6 @@
 // let superagent = require("superagent");
 let cheerio = require("cheerio");
-let async = require("async");
+// let async = require("async");
 let phantom = require("phantom");
 let config  = require('./../config/config.js');
 let mymd5 = require('./utils/md5.js');
@@ -15,8 +15,11 @@ let UrlQueues = new UrlQueues2();
 let whileTag = 5;
 
 
+
+
+
 //待改进
-let gotoanywhere = function(url, domain2){
+let gotoanywhere =  function(url, domain2){
 
 	if(!url) return; 
 
@@ -25,27 +28,98 @@ let gotoanywhere = function(url, domain2){
 	let rekouurl = url;
 
 	let checkModel = new isok();
-	checkModel.save({
+	let checkModelOk =  checkModel.save({
 		indexurl: rekouurl,
 		isok : 'CONTINUE'
-	}, function(err, id){
-		if(err){
-			// console.log('ISOK表保存出错。。。。。' + err);
-		}
 	});
+
+	if (!checkModelOk) {
+		console.log('First save is-success-table error \n');
+		return;
+	}
 
 	let dogoto =  function(url){
 
 		count ++;
 		console.log(`第${count}次开始解析：${url} `);
-		// let image = await phantom(url); 
+		
+		let errno = 500;
+		let errdata = {};
+		let errmsg = 'success';
 
-		let promise = new Promise(function(resolve, reject){
+		let dosomething = function(errno, errdata = null){
+			if (errno === 200 ) { //ok
+				//save data to mongodb
+				let pachomgModel = new model();
+				let pachomgModelIsok = pachomgModel.save({
+					title : errdata.title,
+					desc    : errdata.desc,
+					url    : errdata.currentUrl,
+					content  : errdata.content,
+					img     : errdata.image,
+					indexurl : rekouurl,
+					keyword : errdata.keyword
+				});
+				if (pachomgModelIsok) {
+					console.log('数据库保存成功， 继续下一个。。。。。\n\n');
+				} else {
+					console.log('数据库保存失败， 继续下一个。。。。。\n\n');
+				}
+			} else {
+				console.log('Promise 解析出错， 继续下一个......:\n\n\n');
+			}
+
+			let nexturl = UrlQueues.next();
+			if (!nexturl) {
+				console.log('全部解析完成。。。。。\n\n\n\n');
+				if (whileTag === 5 )
+				{
+					let MyisokModel = new isok();
+					MyisokModel.update({ indexurl: rekouurl}, {isok: 'SUCCESS'});
+					console.log('完成----------------------------\n\n\n\n\n\n');
+				} else {
+					console.log('等待其他事件完成调度。。。。。' + whileTag);
+				}
+
+			} else {
+				console.log('下一个URL: ' + nexturl);
+				console.log('剩余解析长度： ' + UrlQueues.getNoLength());
+
+				switch(whileTag) {
+					case 1: 
+						dogoto(nexturl);
+						break;
+					case 2: 
+						dogoto(nexturl);
+						dogoto(UrlQueues.next());
+						break;
+					case 3: 
+						dogoto(nexturl);
+						dogoto(UrlQueues.next());
+						dogoto(UrlQueues.next());
+						break;
+					case 4: 
+						dogoto(nexturl);
+						dogoto(UrlQueues.next());
+						dogoto(UrlQueues.next());
+						dogoto(UrlQueues.next());
+						break;
+					case 5: 
+						dogoto(nexturl);
+						dogoto(UrlQueues.next());
+						dogoto(UrlQueues.next());
+						dogoto(UrlQueues.next());
+						dogoto(UrlQueues.next());
+						break;
+				}
+
+			}
+		}
+
+
+		let promise = new Promise(function(resovle, reject){
 			whileTag --;
-			let phantom_, 
-			sitepage_,
-			image = config.phantom.saveimgpath + mymd5(url) + config.phantom.imagesuffix;
-
+			let phantom_, sitepage_, image = config.phantom.saveimgpath + mymd5(url) + config.phantom.imagesuffix;
 			phantom.create(['--ignore-ssl-errors=yes', '--load-images=yes']).then(ph => {
 				phantom_ = ph;
 				return phantom_.createPage();
@@ -71,7 +145,7 @@ let gotoanywhere = function(url, domain2){
 				
 				if(!content){
 					image = false;
-					reject(new Error('phantom 解析出错。。。。。。。。'));
+					reject('phantom 解析失败');
 				} else {
 					let keyword = tree.start(content);
 					let $ = cheerio.load(content);
@@ -88,177 +162,31 @@ let gotoanywhere = function(url, domain2){
 						content: '',
 						keyword: keyword
 					};
-					resolve(data);
-				}
+					resovle(data);
+				} 
 			}).catch(error => {
 				sitepage_.close();
 				phantom_.exit();
-				reject(new Error(error));
+				reject('phantom未知错误' + error);
 			});
-			
 		});
 
-		promise.then(function(result){
-			whileTag ++;
-			let pachomgModel = new model();
-			pachomgModel.save({
-				title : result.title,
-				desc    : result.desc,
-				url    : result.currentUrl,
-				content  : result.content,
-				img     : result.image,
-				indexurl : rekouurl,
-				keyword : result.keyword
-			}, function(err, id){
-				if(err){
-					console.log('数据库保存失败， 继续下一个。。。。。');
-				} else {
-					console.log('数据库保存成功， 继续下一个。。。。。');
-				}
-			});
+		whileTag ++;		
 
-			let nexturl = UrlQueues.next();
-			if(!nexturl){
-				console.log('全部解析完成。。。。。');
-
-				if (whileTag === 5 )
-				{
-					// let pachomgModelcount2 = new model();
-					// pachomgModelcount2.count({indexurl: rekouurl}, function(err, c){
-					// 	if(err){
-					// 		console.log('Find mongodb count error ......');
-					// 		console.log(err);
-					// 	} else {
-					// 		console.log('结果数据长度： ' + c);
-					// 	}
-					// });
-					// console.log('Url队列长度： ' + UrlQueues.getLength());
-					// // console.log(UrlQueues.getData());
-					
-					let isokModel = new isok();
-					isokModel.update(
-						{ indexurl: rekouurl}, 
-						{
-							isok: 'SUCCESS'
-						}, function(err, id){
-							if(err){
-								console.log('ISOK表保存出错。1。。。。',err);
-								// console.log('ISOK表保存出错。。。。。' + err);
-							}
-						}
-					);
-					console.log('完成----------------------------');
-				} else {
-					console.log('等待其他事件完成调度。。。。。' + whileTag);
-				}
-				
-			} else {
-				console.log('下一个URL: ' + nexturl);
-
-				switch(whileTag) {
-					case 1: 
-						dogoto(nexturl);
-						break;
-					case 2: 
-						dogoto(nexturl);
-						dogoto(UrlQueues.next());
-						break;
-					case 3: 
-						dogoto(nexturl);
-						dogoto(UrlQueues.next());
-						dogoto(UrlQueues.next());
-						break;
-					case 4: 
-						dogoto(nexturl);
-						dogoto(UrlQueues.next());
-						dogoto(UrlQueues.next());
-						dogoto(UrlQueues.next());
-						break;
-					case 5: 
-						dogoto(nexturl);
-						dogoto(UrlQueues.next());
-						dogoto(UrlQueues.next());
-						dogoto(UrlQueues.next());
-						dogoto(UrlQueues.next());
-						break;
-				}
-			}
+		promise.then(function(res){
+			console.log('Promise + phantom 解析成功 \n\n');
+			console.log(res);
+			dosomething(200, res);
 		}, function(err){
-			console.log('Promise 解析出错， 继续下一个......:\n', err);
-			whileTag ++;
-
-			let pachomgModel = new model();
-			let nexturl = UrlQueues.next();
-			if(!nexturl){
-				console.log('全部解析完成。。。。。');
-
-				if (whileTag === 5 )
-				{
-					// pachomgModel.count({indexurl: rekouurl}, function(err, c){
-					// 	if(err){
-					// 		console.log(err);
-					// 	} else {
-					// 		console.log('结果数据长度： ' + c);
-					// 	}
-					// });
-					// console.log('Url队列长度： ' + UrlQueues.getLength());
-					// // console.log(UrlQueues.getData());
-					
-
-					// Oh here , get a error : MongoError: server 127.0.0.1:27017 sockets closed
-
-					let isokModel = new isok();
-					isokModel.update(
-						{ indexurl: rekouurl}, 
-						{
-							isok: 'SUCCESS'
-						}, function(err, id){
-							if(err){
-								// console.log('ISOK表保存出错。。。。。' + err);
-								console.log('ISOK表保存出错。1。。。。',err);
-							}
-						}
-					);
-					console.log('完成----------------------------');
-				} else {
-					console.log('等待其他事件完成调度。。。。。' + whileTag);
-				}
-
-				
-			} else {
-				console.log('下一个URL: ' + nexturl);
-				switch(whileTag) {
-					case 1: 
-						dogoto(nexturl);
-						break;
-					case 2: 
-						dogoto(nexturl);
-						dogoto(UrlQueues.next());
-						break;
-					case 3: 
-						dogoto(nexturl);
-						dogoto(UrlQueues.next());
-						dogoto(UrlQueues.next());
-						break;
-					case 4: 
-						dogoto(nexturl);
-						dogoto(UrlQueues.next());
-						dogoto(UrlQueues.next());
-						dogoto(UrlQueues.next());
-						break;
-					case 5: 
-						dogoto(nexturl);
-						dogoto(UrlQueues.next());
-						dogoto(UrlQueues.next());
-						dogoto(UrlQueues.next());
-						dogoto(UrlQueues.next());
-						break;
-				}
-			}
+			console.log('Promise + phantom 解析成功ge chui zi .. \n\n');
+			console.log(err);
+			dosomething(500);
 		});
 	}
 	dogoto(url);
 }
+
+
 
 
 module.exports = gotoanywhere;
