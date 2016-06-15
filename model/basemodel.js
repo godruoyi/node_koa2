@@ -77,13 +77,10 @@ export default class BaseModel
       if(err) {
         console.log(err);
       } else {
-        console.log(result);
-        console.log('\n-----------------------------------\n');
         data = result;
       }
     });
     _db.close();
-    console.log('data length: ' + data.length);
     return data;
   }
 

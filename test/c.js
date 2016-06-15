@@ -1,15 +1,4 @@
 
-
-
-
-var dogoto = function(url){
-
-	console.log('url: ' + url);
-
-	var nexturl = 'http://godruoyi.com?id=' + Math.random();
-	setTimeout(function(){
-		dogoto(nexturl);
-	},1000);
-}
-
-dogoto('http://www.godruoyi.com3');
+var image = "F:/Zend/apps/node/koa33/node_koa2/public/img/project/aaa.jpg";
+image = image.replace("F:/Zend/apps/node/koa33/node_koa2/public/img/project/", 'http://127.0.0.1:3000/');
+console.log(image);

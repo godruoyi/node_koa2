@@ -14,6 +14,7 @@ export default class extends BaseModel{
       content  : {type : String},
       img     : {type : String},
       indexurl : {type : String}, 
+      keyword : {type : String}, 
       data : {type : Date, default: Date.now}
   	};
   	super('crawler_data_one', mongooseSchema);
