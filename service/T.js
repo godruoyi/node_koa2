@@ -204,6 +204,9 @@ let gotoanywhere = function(url, domain2){
 					// console.log('Url队列长度： ' + UrlQueues.getLength());
 					// // console.log(UrlQueues.getData());
 					
+
+					// Oh here , get a error : MongoError: server 127.0.0.1:27017 sockets closed
+
 					let isokModel = new isok();
 					isokModel.update(
 						{ indexurl: rekouurl}, 
