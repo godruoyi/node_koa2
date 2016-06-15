@@ -3,7 +3,7 @@ module.exports = {
 
 	basepath : 'http://127.0.0.1:3000/',
 
-	imagebase: 'http://127.0.0.1:3000/public/img/project/',
+	imagebase: 'http://127.0.0.1:3000/img/project/',
 
 	//
 	phantom : {

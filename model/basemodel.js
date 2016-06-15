@@ -102,6 +102,7 @@ export default class BaseModel
   {
     var _db = this.db;
     await this.mongooseModel.count(where, function(err, c) {
+      _db.close();
       if(err){
         callback(err);
       } else {
@@ -109,7 +110,6 @@ export default class BaseModel
         callback(null, c);
       }
     });
-    _db.close();
     
   }
 
@@ -124,6 +124,16 @@ export default class BaseModel
   	  }
       _db.close();
   	});
+  }
+
+  /**
+   * 
+   */
+  close()
+  {
+    var _db = this.db;
+    _db.close();
+    // this = null;
   }
 
 

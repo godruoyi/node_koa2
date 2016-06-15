@@ -18,6 +18,8 @@ let whileTag = 5;
 //待改进
 let gotoanywhere = function(url, domain2){
 
+	if(!url) return; 
+
 	let count = 0;
 	const domain = domain2;
 	let rekouurl = url;
@@ -121,17 +123,17 @@ let gotoanywhere = function(url, domain2){
 
 				if (whileTag === 5 )
 				{
-					let pachomgModelcount = new model();
-					pachomgModelcount.count({indexurl: rekouurl}, function(err, c){
-						if(err){
-							console.log('Find mongodb count error ......');
-							console.log(err);
-						} else {
-							console.log('结果数据长度： ' + c);
-						}
-					});
-					console.log('Url队列长度： ' + UrlQueues.getLength());
-					// console.log(UrlQueues.getData());
+					// let pachomgModelcount2 = new model();
+					// pachomgModelcount2.count({indexurl: rekouurl}, function(err, c){
+					// 	if(err){
+					// 		console.log('Find mongodb count error ......');
+					// 		console.log(err);
+					// 	} else {
+					// 		console.log('结果数据长度： ' + c);
+					// 	}
+					// });
+					// console.log('Url队列长度： ' + UrlQueues.getLength());
+					// // console.log(UrlQueues.getData());
 					
 					let isokModel = new isok();
 					isokModel.update(
@@ -140,10 +142,12 @@ let gotoanywhere = function(url, domain2){
 							isok: 'SUCCESS'
 						}, function(err, id){
 							if(err){
+								console.log('ISOK表保存出错。1。。。。',err);
 								// console.log('ISOK表保存出错。。。。。' + err);
 							}
 						}
 					);
+					console.log('完成----------------------------');
 				} else {
 					console.log('等待其他事件完成调度。。。。。' + whileTag);
 				}
@@ -190,15 +194,15 @@ let gotoanywhere = function(url, domain2){
 
 				if (whileTag === 5 )
 				{
-					pachomgModel.count({indexurl: rekouurl}, function(err, c){
-						if(err){
-							console.log(err);
-						} else {
-							console.log('结果数据长度： ' + c);
-						}
-					});
-					console.log('Url队列长度： ' + UrlQueues.getLength());
-					// console.log(UrlQueues.getData());
+					// pachomgModel.count({indexurl: rekouurl}, function(err, c){
+					// 	if(err){
+					// 		console.log(err);
+					// 	} else {
+					// 		console.log('结果数据长度： ' + c);
+					// 	}
+					// });
+					// console.log('Url队列长度： ' + UrlQueues.getLength());
+					// // console.log(UrlQueues.getData());
 					
 					let isokModel = new isok();
 					isokModel.update(
@@ -208,9 +212,11 @@ let gotoanywhere = function(url, domain2){
 						}, function(err, id){
 							if(err){
 								// console.log('ISOK表保存出错。。。。。' + err);
+								console.log('ISOK表保存出错。1。。。。',err);
 							}
 						}
 					);
+					console.log('完成----------------------------');
 				} else {
 					console.log('等待其他事件完成调度。。。。。' + whileTag);
 				}
