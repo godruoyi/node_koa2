@@ -1,9 +1,9 @@
 module.exports = {
 	//所有路径后都需要加上 反斜杠 `/`
 
-	basepath : 'http://127.0.0.1:3000/',
+	basepath : 'http://192.168.0.218:3000/',
 
-	imagebase: 'http://127.0.0.1:3000/img/project/',
+	imagebase: 'http://192.168.0.218:3000/img/project/',
 
 	//
 	phantom : {

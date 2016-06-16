@@ -33,21 +33,22 @@ export default class BaseModel
         callback(null, _id);
       }
     });
-    _db.close();
+      _db.close();
   	
   }
 
-  update(where, update, callback)
+ async update(where, update, callback)
   {
     var _db = this.db;
-    update = {$set: update};
-    var options = {upsert : true};
-    this.mongooseModel.update(where, update, options, function(error){
-    if(error) {
-        // callback('update error .... '+error);
-    } else {
-        // console.log('update ok!');
-    }
+    // update = { $set: update};
+    var options = {};
+    await this.mongooseModel.update(where, update, function(error, numAffected){
+      if(error) {
+          callback('update error .... '+error);
+      } else {
+          console.log('update ok!' + numAffected);
+          callback(null, 'true');
+      }
       _db.close();
     });
   }
@@ -69,19 +70,20 @@ export default class BaseModel
   }
 
 
-  async findByPage(options, page = 1, page_size = 10)
+  async findByPage(options, callback)
   {
+    let page = options.page ? options.page : 0;
+    let page_size = options.page_size ? options.page_size : 15;
     let _db = this.db;
-    let data = [];
     await this.mongooseModel.find(options.where, options.fields, {skip: page, limit: page_size} , function(err, result) {
       if(err) {
         console.log(err);
+        callback(err);
       } else {
-        data = result;
+        callback(null, result);
       }
     });
-    _db.close();
-    return data;
+     _db.close();
   }
 
   async findOne(where, callback)
@@ -102,15 +104,15 @@ export default class BaseModel
   {
     var _db = this.db;
     await this.mongooseModel.count(where, function(err, c) {
-      _db.close();
       if(err){
+        console.log('Count error : ',err);
         callback(err);
       } else {
-        // console.log('DB COUNT OK :' + c);
+        console.log('DB COUNT OK :' + c);
         callback(null, c);
       }
     });
-    
+    _db.close();
   }
 
   delete(where, callback)

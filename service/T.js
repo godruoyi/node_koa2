@@ -123,30 +123,15 @@ let gotoanywhere = function(url, domain2){
 
 				if (whileTag === 5 )
 				{
-					// let pachomgModelcount2 = new model();
-					// pachomgModelcount2.count({indexurl: rekouurl}, function(err, c){
-					// 	if(err){
-					// 		console.log('Find mongodb count error ......');
-					// 		console.log(err);
-					// 	} else {
-					// 		console.log('结果数据长度： ' + c);
-					// 	}
-					// });
-					// console.log('Url队列长度： ' + UrlQueues.getLength());
-					// // console.log(UrlQueues.getData());
-					
-					let isokModel = new isok();
-					isokModel.update(
-						{ indexurl: rekouurl}, 
-						{
-							isok: 'SUCCESS'
-						}, function(err, id){
-							if(err){
-								console.log('ISOK表保存出错。1。。。。',err);
-								// console.log('ISOK表保存出错。。。。。' + err);
-							}
+					console.log('rekouurl: ' + rekouurl);
+					let wodeisokmodela = new isok();
+					wodeisokmodela.update({ indexurl: rekouurl}, {isok: 'SUCCESS'}, function(err, id){
+						if(err){
+							console.log('ISOK表保存出错。1。。。。',err);
+						} else {
+							console.log(id);
 						}
-					);
+					});
 					console.log('完成----------------------------');
 				} else {
 					console.log('等待其他事件完成调度。。。。。' + whileTag);
@@ -187,44 +172,24 @@ let gotoanywhere = function(url, domain2){
 			console.log('Promise 解析出错， 继续下一个......:\n', err);
 			whileTag ++;
 
-			let pachomgModel = new model();
 			let nexturl = UrlQueues.next();
 			if(!nexturl){
 				console.log('全部解析完成。。。。。');
 
 				if (whileTag === 5 )
 				{
-					// pachomgModel.count({indexurl: rekouurl}, function(err, c){
-					// 	if(err){
-					// 		console.log(err);
-					// 	} else {
-					// 		console.log('结果数据长度： ' + c);
-					// 	}
-					// });
-					// console.log('Url队列长度： ' + UrlQueues.getLength());
-					// // console.log(UrlQueues.getData());
-					
-
-					// Oh here , get a error : MongoError: server 127.0.0.1:27017 sockets closed
-
-					let isokModel = new isok();
-					isokModel.update(
-						{ indexurl: rekouurl}, 
-						{
-							isok: 'SUCCESS'
-						}, function(err, id){
-							if(err){
-								// console.log('ISOK表保存出错。。。。。' + err);
-								console.log('ISOK表保存出错。1。。。。',err);
-							}
+					let wodeisokmodela2 = new isok();
+					wodeisokmodela2.update({ indexurl: rekouurl}, {isok: 'SUCCESS'}, function(err, id){
+						if(err){
+							console.log('ISOK表保存出错。1。。。。',err);
+						} else {
+							console.log(id);
 						}
-					);
+					});
 					console.log('完成----------------------------');
 				} else {
 					console.log('等待其他事件完成调度。。。。。' + whileTag);
 				}
-
-				
 			} else {
 				console.log('下一个URL: ' + nexturl);
 				switch(whileTag) {

@@ -14,7 +14,7 @@ $(function () {
     _this.text("正在解析");
     $overlay.fadeIn();
     $.ajax({
-      url: '/crawler/mapsearch',
+      url: '/crawler/start',
       method: 'post',
       dataType: 'json',
       data: { url: $url.val().trim() },

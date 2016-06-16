@@ -5,6 +5,15 @@ export default class {
 		this.queue = [];
 		this.queue_p = [];
 		this.config = require('./../../config/config.js');
+		this.noallowsuifx = [
+			'.js',
+			'.jpg',
+			'.jpeg',
+			'.png',
+			'.apk',
+			'.gif',
+			'.exe'
+		];
 
 	}
 
@@ -17,10 +26,18 @@ export default class {
 			data = data.slice(0, (this.config.urlqueueMaxLength - this.getLength()));
 		}
 		for(let a of data){
-			if(typeof(a) === 'undefined') continue;
-			if((a.endsWith('.jpg')) || (a.endsWith('.gif'))) continue;
+			if( !a ) continue;
+			let isbreak = 0;
+			for(let sufix of this.noallowsuifx)
+			{
+				if (a.endsWith(sufix)){
+					isbreak = 1;
+					break;
+				}
+			}
+			if(isbreak) continue;
 
-			if(!this.queue.includes(a)){
+			if( this.queue.indexOf(a) === -1 ){
 				this.queue.push(a);
 				this.queue_p.push(a);
 			}
