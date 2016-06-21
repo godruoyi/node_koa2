@@ -1,6 +1,8 @@
 import BaseController from '../service/BaseController'
 import table from './../model/datas.js';
 import tree from './../service/tree.js';
+import url from 'url';
+
 
 export default class extends BaseController{
 	reoutes(){
@@ -18,27 +20,38 @@ export default class extends BaseController{
 		});
 
 		this.router.get('/test/search', async function(ctx, next){
-			let wodeneir = `
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-<meta name="description" content="城市也叫城市聚落，是以非农业产业和非农业人口集聚形成的较大居民点。人口较稠密的地区称为城市，一般包括了住宅区、工业区和商业区并且具备行政管辖功能。城市的行政管辖功能可能涉及较其本身更广泛的区域，其中有居民区、街道、医院、学校、公共绿地、写字楼、商业卖场、广场、公园等...">
-<title>城市（地理学名词）_百度百科</title>
+			let uuuu = ctx.request.query.url;
+			let urlobj = url.parse(uuuu);
 
-<meta name="keywords" content="城市 城市定义 城市形成 城市发展 城市中国情况">
-<meta name="image" content="http://baike.bdimg.com/cms/static/baike.png">
-中国移动
+			
 
-<p>物联网</p>
-<body class="wiki-lemma normal">
+			let protocol = urlobj.protocol;
+			let pathname = urlobj.pathname;
+			let domain = protocol + '//' + urlobj.hostname;
 
-</body>
-</html>
-`;
-			let content = tree.start(wodeneir);
-			ctx.body = content;
+			console.log('Domain======>>>>>>>>', domain);
+			console.log('pathname======>>>>>>>>', pathname);
+
+
+			let startsWith = '';
+
+			if (pathname) {
+
+				if (pathname.endsWith('/')) pathname = pathname.slice(0, pathname.length-1);
+				startsWith = pathname.slice(pathname.lastIndexOf('/')+1);
+			}
+
+			console.log('startsWithstartsWithstartsWith->>', startsWith);
+
+			let wwwwww = 'wwwwww.php?asdad=asdadaasdasd';
+			if( startsWith && wwwwww.startsWith(startsWith)) {   //http://open.iot.10086.cn /bbs/dadaa/   dasda.phpsDfsfsdfdsfs
+				let wocao = '';	
+				wocao = wwwwww.slice(wwwwww.lastIndexOf(startsWith));
+				wocao = domain + pathname +  wwwwww;
+				console.log('wocao->>>>>>>>>>>>>>>>>>',wocao);	
+			}
+
+
 		});
 	
 	};

@@ -17,7 +17,7 @@ module.exports = {
 	},
 
 	//最大爬取的URL队列长度
-	urlqueueMaxLength: 20,
+	urlqueueMaxLength: 500,
 
 	mongodb: {
 		host: "127.0.0.1",

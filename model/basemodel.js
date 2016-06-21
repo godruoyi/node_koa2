@@ -91,7 +91,20 @@ export default class BaseModel
     var _db = this.db;
     await this.mongooseModel.findOne(where, function(err, doc){
       if(err){
-        callback('mongodb find one error ...');
+        callback(new Error('mongodb find one error ...'));
+      } else {
+        callback(null, doc);
+      }
+    });
+    _db.close();
+  }
+
+  async findById(id, callback)
+  {
+    var _db = this.db;
+    await this.mongooseModel.findById(id, function(err, doc){
+      if(err){
+        callback(new Error('mongodb find By Id error ...'));
       } else {
         callback(null, doc);
       }
@@ -115,17 +128,24 @@ export default class BaseModel
     _db.close();
   }
 
-  delete(where, callback)
+  async delete(where, callback)
   {
     var _db = this.db;
-  	this.mongooseModel.remove(where, function(err, docs){
+  	await this.mongooseModel.remove(where, function(err, docs){
   	  if(err){
         callback('delete shi bai ....');
   	  } else {
   	  	// console.log('delete SUCCESS ....');
+        callback(null, 'SUCCESS'); 
   	  }
-      _db.close();
-  	});
+    });
+    _db.close();
+  }
+
+  async findByIdAndRemove(id, callback){
+    var _db = this.db;
+    await this.mongooseModel.findByIdAndRemove(id, callback);
+    _db.close();
   }
 
   /**
